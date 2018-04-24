@@ -1,6 +1,5 @@
 package hotel.booking.app.controller;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import edu.emory.mathcs.backport.java.util.Collections;
 import hotel.booking.app.dao.CustomerDao;
 import hotel.booking.app.entity.Customer;
 import hotel.booking.app.service.HotelService;
@@ -24,14 +24,20 @@ import hotel.booking.app.service.HotelService;
 @RequestMapping("/customer")
 public class CustomerController {
 
+	/**
+	 * hotel service layer
+	 */
 	@Autowired
 	private HotelService hotelservice;
-	
+
+	/**
+	 * @param theModel
+	 * @return
+	 */
 	@GetMapping("/WelcomeHome")
-	public String welcomeHomeLanding(Model theModel){
+	public String welcomeHomeLanding(Model theModel) {
 		return "WelcomeHome";
 	}
-
 
 	@GetMapping("/CurrentCustomers")
 	public String listCustomers(Model theModel) {
@@ -43,15 +49,18 @@ public class CustomerController {
 		return "CurrentCustomers";
 	}
 
-	// add customers button stuff
+	// add customers button stuff //change this to a MAPP
 
+	/**
+	 * @param theModel
+	 * @return
+	 */
 	@GetMapping("/AddCustomerForm")
 	public String showFormForAdd(Model theModel) {
 
 		Customer theCustomer = new Customer();
 
 		theModel.addAttribute("customer", theCustomer);
-
 
 		return "addingCustomer-form";
 	}
@@ -64,43 +73,59 @@ public class CustomerController {
 		hotelservice.addCustomer(theCustomer);
 		return "redirect:/customer/CurrentCustomers";
 	}
-	@GetMapping ("/ManageCustomers")
-	public String manageCustomersList(Model theModel){
+
+	@GetMapping("/ManageCustomers")
+	public String manageCustomersList(Model theModel) {
 		List<Customer> theCustomers = hotelservice.getCustomers();
 		theModel.addAttribute("customers", theCustomers);
 
-	return "ManageCustomers";
+		return "ManageCustomers";
 	}
-	
-	
+
+	/**
+	 * @param theId
+	 * @param theModel
+	 * @return
+	 */
 	@GetMapping("/UpdateManageCustomers")
-	public String ManageCustomerForm(@RequestParam("customerId") int theId, Model theModel){
-		
-		//get the customer from the service and service will delgate it somewhere else
+	public String ManageCustomerForm(@RequestParam("customerId") int theId, Model theModel) {
+
+		// get the customer from the service and service will delgate it
+		// somewhere else
 		Customer theCustomer = hotelservice.getCustomer(theId);
-		
-		//set customer as a model attribute to prepopulate the form
-		
+
+		// set customer as a model attribute to prepopulate the form
+
 		theModel.addAttribute("customer", theCustomer);
-		
-		
-		//send over to our form
-		
+
+		// send over to our form
+
 		return "addingCustomer-form";
 	}
+
+	/**
+	 * @param theId
+	 * @return
+	 */
 	@GetMapping("/delete")
-	public String deleteCustomer(@RequestParam("customerId") int theId){
-		
-		//delete the cust
+	public String deleteCustomer(@RequestParam("customerId") int theId) {
+
+		// delete the cust
 		hotelservice.deleteCustomer(theId);
-		
+
 		return "redirect:/customer/ManageCustomers";
 	}
+
+	/**
+	 * @param theSearchName
+	 * @param theModel
+	 * @return
+	 */
 	@PostMapping("/search")
-	public String searchCustomer(@RequestParam("theSearchName") String theSearchName, Model theModel){
+	public String searchCustomer(@RequestParam("theSearchName") String theSearchName, Model theModel) {
 		List<Customer> theCustomers = hotelservice.searchCustomer(theSearchName);
 		theModel.addAttribute("customers", theCustomers);
-		
+
 		return "CurrentCustomers";
-}
+	}
 }
