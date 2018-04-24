@@ -1,0 +1,51 @@
+/**
+ * 
+ */
+package hotel.booking.app.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import hotel.booking.app.dao.*;
+import hotel.booking.app.entity.*;
+
+
+/**
+ * @author Dolic
+ *
+ */
+@Service
+@Transactional
+public class RoomServiceImpl implements RoomService{
+	
+	@Autowired
+	
+	private RoomDao roomDao; //getting data access object here which gives us data directly from database 
+
+	@Override
+	@Transactional
+	public void addRoom(Room room) {
+		roomDao.addRoom(room); //give me ability to add room and place into room db
+		
+	}
+
+	@Override
+	public List<Room> getRooms() {
+		return roomDao.getRooms(); //place in a list of rooms
+	}
+
+	@Override
+	public Room getRoom(int roomId) {
+		return roomDao.getRoom(roomId);
+	}
+
+	@Override
+	public void deleteRoom(int roomId) {
+		roomDao.deleteRoom(roomId);
+		
+	}
+
+}
