@@ -4,7 +4,7 @@
 
 <html>
 <head>
-<title>Adding Customer</title>
+<title>Adding Room</title>
 
 <link type="text/css" rel="stylesheet"
 	href="${pageContext.request.contextPath}/resources/css/style.css">
