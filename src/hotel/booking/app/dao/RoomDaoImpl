@@ -1,0 +1,58 @@
+/**
+ * 
+ */
+package hotel.booking.app.dao;
+
+import java.util.List;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import hotel.booking.app.entity.*;
+
+/**
+ * @author Dolic
+ *
+ */
+@Repository("roomDao")
+public class RoomDaoImpl implements RoomDao {
+	
+	@Autowired
+	private SessionFactory sessionFactory; //starts a session thru hibernate query session
+
+	@Override
+	public void addRoom(Room room) {
+		
+		sessionFactory.getCurrentSession().saveOrUpdate(room); //get the current session save/update the room parameter
+	}
+	
+	//@SuppressWarnings({ "unchecked", "deprecation" }) //what does this do??
+	@Override
+	public List<Room> getRooms() {
+		Session currentSession = sessionFactory.getCurrentSession();
+		Query<Room> theQuery = currentSession.createQuery("from Room", Room.class);
+		List<Room> rooms = theQuery.getResultList();
+		return rooms;
+	}
+
+	@Override
+	public Room getRoom(int roomId) {
+		return(Room) sessionFactory.getCurrentSession().get(Room.class,roomId);
+	}
+
+	@Override
+	public void deleteRoom(int roomId) {
+		sessionFactory.getCurrentSession().createQuery("DELETE FROM room WHERE roomId = "+roomId).executeUpdate();
+		
+	}
+	
+	//tosearch for room??
+	/*public List<Room> searchRoom(String theSearchRoom){
+		Session currentSession = 
+	}*/
+	
+
+}
